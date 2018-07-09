@@ -1,0 +1,35 @@
+version: '2'
+services:
+  db:
+    image: mariadb:10
+    container_name: sff_db
+    restart: always
+    volumes:
+      - sff-db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=sff
+    networks:
+      - front
+      - back
+  app:
+    image: gitlab.sn.com:4567/angular/sff:master
+    hostname: sff.sn.com
+    container_name: sff_app
+    restart: always
+    mem_limit: 1G
+    cpu_quota: 50000
+    volumes:
+      - ./data:/app/
+      - ./.ssh:/root/.ssh:ro
+    ports:
+      - 127.0.0.1:8900:80
+    networks:
+      - front
+      - back
+volumes:
+  sff-db-data:
+    driver: local
+networks:
+  front:
+  back:

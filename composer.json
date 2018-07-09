@@ -1,0 +1,76 @@
+{
+    "name": "SFF",
+    "description": "Stupid FUN FUNdraiser",
+    "keywords": [
+        "stupid fun fundraiser",
+        "sff"
+    ],
+    "type": "project",
+    "license": "BSD-3-Clause",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0",
+        "yiisoft/yii2": "~2.0.12",
+        "yiisoft/yii2-bootstrap": "~2.0.0",
+        "yiisoft/yii2-swiftmailer": "~2.0.0",
+        "sn/utilities": "^1.0.6",
+        "bower/ext-lib": "^1.0.1",
+        "sn/auth": "^2.1.0",
+        "sn/keystorage": "~1.0.0",
+        "sn/yii2-pdf": "^1.0",
+        "stripe/stripe-php": "^2.0@dev"
+    },
+    "require-dev": {
+        "yiisoft/yii2-gii": "~2.0.0",
+        "yiisoft/yii2-faker": "~2.0.0",
+        "codeception/base": "^2.2.3",
+        "codeception/verify": "~0.3.1",
+        "codeception/specify": "~0.4.3",
+        "insolita/yii2-migration-generator": "*"
+    },
+    "config": {
+        "process-timeout": 1800,
+        "fxp-asset": {
+            "installer-paths": {
+                "npm-asset-library": "vendor/npm",
+                "bower-asset-library": "vendor/bower"
+            }
+        }
+    },
+    "scripts": {
+        "post-update-cmd": [
+            "yii\\composer\\Installer::postInstall",
+            "php yii cache/flush-all",
+            "php yii auth/rbac/clear-cache",
+            "php yii migrate --migrationPath=@sn/rbac/migrations --interactive=0",
+            "php yii migrate --migrationPath=@vendor/sn/keystorage/migrations --interactive=0",
+            "php yii migrate --migrationPath=@sn/auth/migrations --interactive=0",
+            "php yii rbac/init --interactive=0",
+            "php yii sff/init --interactive=0",
+            "php yii migrate --interactive=0"
+        ],
+        "post-install-cmd": [
+            "yii\\composer\\Installer::postInstall",
+            "php yii cache/flush-all",
+            "php yii auth/rbac/clear-cache",
+            "php yii migrate --migrationPath=@sn/rbac/migrations --interactive=0",
+            "php yii migrate --migrationPath=@vendor/sn/keystorage/migrations --interactive=0",
+            "php yii migrate --migrationPath=@sn/auth/migrations --interactive=0",
+            "php yii rbac/init --interactive=0",
+            "php yii sff/init --interactive=0",
+            "php yii migrate --interactive=0"
+        ]
+    },
+    "extra": {
+        "yii\\composer\\Installer::postInstall": {
+            "copyFiles": [
+                {
+                    "config/def/env-local.php": "config/env-local.php",
+                    "config/def/cache.php": "config/partials/_cache.php",
+                    "config/def/db.php": "config/partials/_db.php",
+                    "config/def/session.php": "config/partials/_session.php"
+                }
+            ]
+        }
+    }
+}

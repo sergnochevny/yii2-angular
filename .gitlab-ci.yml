@@ -1,0 +1,37 @@
+stages:
+- build
+- deploy
+
+before_script:
+- docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
+variables:
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+
+build:
+  stage: build
+  only: 
+  - master
+  script:
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+
+deploy:
+  stage: deploy
+  only: 
+  - master
+  script:
+#    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+#    - eval $(ssh-agent -s)
+#    - ssh-add <(echo "$ID_RSA")
+#   - mkdir -p ~/.ssh
+#    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+#    - mkdir /deploy/sff 
+    - mkdir /deploy-gl/$CI_PROJECT_NAME || echo "dir already exist"
+    - mkdir /deploy-gl/$CI_PROJECT_NAME/data || echo "dir already exist"
+    - sudo chown -R gitlab-runner:gitlab-runner /deploy-gl/$CI_PROJECT_NAME/data
+    - cp -r deploy/* /deploy-gl/$CI_PROJECT_NAME
+    - rsync --stats --recursive --force --cvs-exclude --exclude="config/*-local.php" --exclude="_db.php" . /deploy-gl/$CI_PROJECT_NAME/data
+    - cd /deploy-gl/sff && docker-compose up -d && docker exec sff_app "/docker-entrypoint.sh"

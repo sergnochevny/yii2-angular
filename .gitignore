@@ -1,0 +1,39 @@
+# phpstorm project files
+/.idea/
+/.git/
+# netbeans project files
+/nbproject/
+
+# zend studio for eclipse project files
+.buildpath
+.project
+/.settings/
+
+# windows thumbnail cache
+Thumbs.db
+
+# composer vendor dir
+/vendor/
+
+# composer itself is not needed
+composer.phar
+
+# Mac DS_Store Files
+.DS_Store
+
+/tests/
+/web/index-test.php
+
+/node_modules/
+/.project
+/web/upload/
+/web/main.dev.js
+/web/vendor.dev.js
+/web/vendor.dev.js.map
+/web/styles.dev.js
+/web/polyfills.dev.js
+/web/main.dev.js.map
+/web/polyfills.dev.js.map
+/web/inline.dev.js
+/web/inline.dev.js.map
+/web/styles.dev.js.map
